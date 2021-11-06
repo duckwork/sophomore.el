@@ -127,6 +127,7 @@ non-nil."
                  (eq (aref keys 0) meta-prefix-char)
                  (eq (aref keys 1) ?x))))
 
+;;;###autoload
 (defun sophomore-disabled-M-x (cmd keys)
   "Disable CMD, unless KEYS begins with \"M-x\"."
   (if (sophomore-extended-command-p keys)
@@ -136,6 +137,7 @@ non-nil."
                       "Run with \\[execute-extended-command]."))
              cmd)))
 
+;;;###autoload
 (defun sophomore-fat-finger (cmd keys)
   "Prompt a user before executing CMD with KEYS not beginning with \"M-x\"."
   (when (or (sophomore-extended-command-p keys)
