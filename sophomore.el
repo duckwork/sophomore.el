@@ -108,6 +108,9 @@ non-nil."
   (let* ((cmd (or cmd this-command))
          (keys (or keys (this-command-keys)))
          (disabled (get cmd 'disabled)))
+    ;; Even though `disabled-command' is never called when a command /isn't/
+    ;; disabled, I'm checking it here just in case `sophomore-dispatch' is
+    ;; called at another time.
     (when disabled
       (funcall (or (alist-get disabled sophomore-dispatch-alist)
                    sophomore-dispatch-fallback-function)

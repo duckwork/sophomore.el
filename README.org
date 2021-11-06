@@ -1,0 +1,98 @@
+#+TITLE: Sophomore.el
+#+SUBTITLE: Better than novice.el, but not by much
+#+AUTHOR: Case Duckworth
+
+While novice.el is fine, but most people disable its disabling of commands at
+some point.  While I can't speak for everyone's motives, I know a big one of
+mine is the clunky UI of the default =disabled-command-function=.
+
+*sophomore* attempts to add a better UI around disabled commands that's
+better-suited to more experienced users.  Of course, my attempt might come
+off as only a little better than novice, or even, dare I say, "sophomoric" in
+nature.
+
+This package trades in the knowledge that a command's disabled property need
+not be a binary choice between "yes" or "no", "t" or "nil": indeed, there are
+a number of ways in which a command might be considered "disabled," with
+different safeguards against using it.  For intermediate and more advanced
+users, a common issue is "fat-fingering" commands like =set-fill-column= when
+=find-file= was meant, or accidentally killing Emacs when typing C-x too
+quickly.  In addition, in my own usage I don't want to /disable/ a command
+per se, but disallow too-easy invocation (which isn't possible with the
+built-in novice.el except by unbinding or rebinding a number of keys).
+
+* Installation
+
+  Until this package is on MELPA or Non-GNU ELPA, you can install it
+  from this Git repository.  I use [[https://github.com/raxod502/straight.el][straight.el]]:
+
+  #+begin_src emacs-lisp
+    (straight-use-package '(sophomore
+                            :host github
+                            :repo "duckwork/sophomore.el"))
+  #+end_src
+
+* Usage
+
+  By default, *sophomore* doesn't do anything.  There are a number of
+  entry points into its functionality, however:
+
+** Override the default =disabled-command-function= with a rich dispatcher
+
+   #+begin_src emacs-lisp
+     (setq disabled-command-function #'sophomore-dispatch)
+   #+end_src
+
+   Instead of a simple disabled/enabled dichotomy for commands, it can
+   be useful to have more options.  For example, I myself frequently
+   "fat-finger" =C-x C-c=, which can close Emacs.  However, by adding
+   ~'(fatfinger . sophomore-fat-finger)~ to
+   =sophomore-dispatch-alist=, and running
+   ~(put 'save-buffers-kill-terminal 'disabled 'fatfinger)~, I can get
+   a yes-or-no prompt when I fat-finger something before running it.
+
+   =sophomore-dispatch= searches through =sophomore-dispatch-alist=
+   for the symbol in a command's disabled property, running the
+   function associated with it.  If there isn't one,
+   =sophomore-dispatch-fallback-function= is called instead, which
+   defaults to =sophomore-disabled-M-x=.  That function allows calling
+   a function from =M-x= (=execute-extended-command=), but not from a
+   key binding---so you can still run the command, but not accidentally.
+
+** Enable all commands (set =disabled= property to =nil=)
+
+   #+begin_src emacs-lisp
+     (sophomore-enable-all)
+   #+end_src
+
+   Map through every command, and if its =disabled= property is
+   non-nil, set it to nil.  This is a convenience function that you
+   can really do yourself, and in fact was pulled directly from
+   [[https://www.emacswiki.org/emacs/DisabledCommands][EmacsWiki]].
+
+*** Enable some commands and disable others easily
+
+    *sophomore* also ships with a few functions to make enabling and
+     disabling commands in bulk easier:
+
+     - =sophomore-disable= :: Disable all commands given as parameters
+       by setting their =disabled= property to =t=.
+     - =sophomore-enable= :: Enable all commands given as parameters
+       by setting their =disabled= property to =nil=.
+     - =sophomore-disable-with= :: Given a symbol and a list of
+       commands, set each command's =disabled= property to the symbol.
+
+** Contributing
+
+   *sophomore* is licensed under the Good Choices License:
+
+   #+begin_quote
+     Everyone is permitted to do whatever with this software, without
+     limitation.  This software comes without any warranty whatsoever,
+     but with two pieces of advice:
+
+     - Be kind to yourself.
+     - Make good choices.
+   #+end_quote
+
+   To contribute, you can open an issue or pull request on this repo.
