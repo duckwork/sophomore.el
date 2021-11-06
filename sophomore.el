@@ -37,8 +37,6 @@
 ;; per se, but disallow too-easy invocation (which isn't possible with the
 ;; built-in novice.el except by unbinding or rebinding a number of keys).
 
-;; 
-
 ;;; Code:
 
 (require 'novice)
@@ -98,7 +96,7 @@ doesn't write to `user-emacs-file'."
 ;;; Disabled command dispatcher
 
 ;;;###autoload
-(defun sophomore-dispatcher (&optional cmd keys)
+(defun sophomore-dispatch (&optional cmd keys)
   "If CMD is disabled, figure out what to do based on its disabled property.
 CMD defaults to `this-command', and KEYS default to
 `this-command-keys'.  CMD and KEYS are passed to a function in
@@ -115,7 +113,7 @@ non-nil."
                    sophomore-dispatch-fallback-function)
                cmd keys))))
 
-;;; Functions for `sophomore-dispatcher'
+;;; Functions for `sophomore-dispatch'
 
 (defun sophomore-extended-command-p (keys)
   "Inspect a the KEYS that called a command for `execute-extended-command'."
