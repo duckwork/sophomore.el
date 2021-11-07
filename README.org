@@ -82,6 +82,21 @@ built-in novice.el except by unbinding or rebinding a number of keys).
      - =sophomore-disable-with= :: Given a symbol and a list of
        commands, set each command's =disabled= property to the symbol.
 
+** My configuration
+
+   As an example, here's my personal =sophomore= configuration:
+
+   #+begin_src emacs-lisp
+     (straight-use-package '(sophomore
+                             :host github
+                             :repo "duckwork/sophomore.el"))
+
+     (setq disabled-command-function 'sophomore-dispatch
+           sophomore-dispatch-alist '((fatfinger . sophomore-fat-finger)))
+
+     (put 'save-buffers-kill-terminal 'disabled 'fatfinger)
+   #+end_src
+
 ** Contributing
 
    *sophomore* is licensed under the Good Choices License:
