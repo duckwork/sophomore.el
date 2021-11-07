@@ -46,7 +46,7 @@ built-in novice.el except by unbinding or rebinding a number of keys).
    Instead of a simple disabled/enabled dichotomy for commands, it can
    be useful to have more options.  For example, I myself frequently
    "fat-finger" =C-x C-c=, which can close Emacs.  However, by adding
-   ~'(fatfinger . sophomore-fat-finger)~ to
+   ~(fatfinger . sophomore-fat-finger)~ to
    =sophomore-dispatch-alist=, and running
    ~(put 'save-buffers-kill-terminal 'disabled 'fatfinger)~, I can get
    a yes-or-no prompt when I fat-finger something before running it.
