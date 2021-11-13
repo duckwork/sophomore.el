@@ -70,7 +70,7 @@ To emulate Emacs's default behavior, use the function
 
 (defun sophomore-disable-with (prop &rest commands)
   "Disable COMMANDS by setting their disabled property to PROP."
-  (mapc (lambda (c) (put command 'disabled prop)) commands))
+  (mapc (lambda (c) (put c 'disabled prop)) commands))
 
 ;;;###autoload
 (defun sophomore-enable-all ()
