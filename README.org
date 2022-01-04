@@ -2,13 +2,13 @@
 #+SUBTITLE: Better than novice.el, but not by much
 #+AUTHOR: Case Duckworth
 
-~novice.el~ is one of the most-maligned[fn:1] packages in the Emacs ecosystem,
-consistently causing new and slightly-more-experienced users puzzlement when
-they attempt to run a command and get the default "You have invoked the disabled
-command ..." message, with its confirmation dialogue and confusing options.
-Sometimes, the command has been "fat-fingered," like typing ~C-x C-n~ instead of
-~C-x n~, or we're trying to invoke the command with ~M-x~, which I think means we
-know what we're doing.
+~novice.el~ is one of the most-maligned /[citation needed]/ packages in the Emacs
+ecosystem, consistently causing new and slightly-more-experienced users
+puzzlement when they attempt to run a command and get the default "You have
+invoked the disabled command ..." message, with its confirmation dialogue and
+confusing options.  Sometimes, the command has been "fat-fingered," like typing
+~C-x C-n~ instead of ~C-x n~, or we're trying to invoke the command with ~M-x~, which
+I think means we know what we're doing.
 
 *sophomore* attempts to add a better UI around disabled commands that's
 better-suited to more experienced users.  Of course, my attempt might come off
@@ -113,7 +113,3 @@ To contribute, you can open an issue or pull request on this repo.
 - v0.2 :: Add =sophomore-mode= for easier use; change the default
   =sophomore-dispatch-alist=; change some function names.
 - v0.1 :: Initial release
-
-* Footnotes
-
-[fn:1] [citation needed]
