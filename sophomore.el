@@ -6,7 +6,7 @@
 ;; Homepage: https://github.com/duckwork/sophomore.el
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "25.1"))
-;; Package-Version: 0.1
+;; Package-Version: 0.2
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -37,6 +37,11 @@
 ;; per se, but disallow too-easy invocation (which isn't possible with the
 ;; built-in novice.el except by unbinding or rebinding a number of keys).
 
+;; USE:
+
+;; Enable `sophomore-mode' to change `disabled-command-function' to
+;; `sophomore-dispatch'.
+
 ;;; Code:
 
 (require 'novice)
@@ -48,7 +53,8 @@
   :prefix "sophomore-"
   :group 'convenience)
 
-(defcustom sophomore-dispatch-alist '()
+(defcustom sophomore-dispatch-alist '((confirm . sophomore-disabled-confirm)
+                                      (M-x . sophomore-disabled-M-x))
   "Alist of possible disabled property symbols and the functions to call.
 In an entry (SYMBOL . FUNCTION), the symbol can be arbitrary; if
 a command's disabled property is not found in
@@ -60,11 +66,16 @@ command and the keys used to call that command."
   :type '(alist :key-type symbol
                 :value-type function))
 
-(defcustom sophomore-dispatch-fallback-function 'sophomore-disabled-M-x
+(defcustom sophomore-dispatch-fallback-function #'sophomore-disabled-M-x
   "What to do if a disabled property isn't in `sophomore-dispatch-alist'.
 To emulate Emacs's default behavior, use the function
 `disabled-command-function'."
   :type 'function)
+
+;;; Variables
+
+(defvar sophomore-default-disabled-command-function disabled-command-function
+  "Function to restore after disabling function `sophomore-mode'.")
 
 ;;; Utility functions
 
@@ -132,7 +143,7 @@ non-nil."
 
 ;;;###autoload
 (defun sophomore-disabled-M-x (cmd keys)
-  "Disable CMD, unless KEYS begins with \"M-x\"."
+  "Disable CMD, unless KEYS begins with \\[execute-extended-command]."
   (if (sophomore-extended-command-p keys)
       (call-interactively cmd)
     (message (substitute-command-keys
@@ -141,12 +152,28 @@ non-nil."
              cmd)))
 
 ;;;###autoload
-(defun sophomore-fat-finger (cmd keys)
-  "Prompt a user before executing CMD with KEYS not beginning with \"M-x\"."
+(defun sophomore-disabled-confirm (cmd keys)
+  "Prompt a user before executing CMD.
+If CMD is called with KEYS not beginning with
+\\[execute-extended-command], confirm the call with the user."
   (when (or (sophomore-extended-command-p keys)
             (yes-or-no-p
              (format "Are you sure you want to execute `%s'? " cmd)))
-      (call-interactively cmd)))
+    (call-interactively cmd)))
+
+;;;###autoload
+(define-obsolete-function-alias 'sophomore-fat-finger
+  'sophomore-disabled-confirm "0.2")
+
+;;;###autoload
+(define-minor-mode sophomore-mode
+  "Minor-mode to make `sophomore-dispatch' the `disabled-command-function'."
+  :keymap nil
+  :global t
+  :lighter " Soph"
+  (setq disabled-command-function
+        (if sophomore-mode #'sophomore-dispatch
+          sophomore-default-disabled-command-function)))
 
 (provide 'sophomore)
 ;;; sophomore.el ends here
