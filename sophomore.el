@@ -54,6 +54,7 @@
   :group 'convenience)
 
 (defcustom sophomore-dispatch-alist '((confirm . sophomore-disabled-confirm)
+                                      (confirm-y . sophomore-disabled-confirm-with-y)
                                       (M-x . sophomore-disabled-M-x))
   "Alist of possible disabled property symbols and the functions to call.
 In an entry (SYMBOL . FUNCTION), the symbol can be arbitrary; if
@@ -165,6 +166,21 @@ If CMD is called with KEYS not beginning with
 ;;;###autoload
 (define-obsolete-function-alias 'sophomore-fat-finger
   'sophomore-disabled-confirm "0.2")
+
+;;;###autoload
+(defun sophomore-disabled-confirm-with-y (cmd keys)
+  "Prompt a user before executing CMD.
+If CMD is called with KEYS not beginning with
+\\[execute-extended-command], confirm the call with the user.
+
+Like `sophomore-disabled-confirm' (which see), but any key other
+than \"y\" counts as a no."
+  (when (or (sophomore-extended-command-p keys)
+            (let ((yp (read-char-exclusive
+                       (format "Sure you want to execute `%s' (\"y\" to confirm)?"
+                               cmd))))
+              (eq yp ?y)))
+    (call-interactively cmd)))
 
 ;;;###autoload
 (define-minor-mode sophomore-mode
