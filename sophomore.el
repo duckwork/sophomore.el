@@ -81,6 +81,7 @@ To emulate Emacs's default behavior, use the function
 
 (defun sophomore-disable-with (prop &rest commands)
   "Disable COMMANDS by setting their disabled property to PROP."
+  (declare (indent 2))
   (mapc (lambda (c) (put c 'disabled prop)) commands))
 
 ;;;###autoload
@@ -135,11 +136,11 @@ non-nil."
   ;; don't like how "M-x" is hardcoded into the function here, but I can't
   ;; figure out how to generalize it.
   (or (eq (aref keys 0) (if (stringp keys)
-                                  (aref "\M-x" 0)
-                                ?\M-x))
-            (and (>= (length keys) 2)
-                 (eq (aref keys 0) meta-prefix-char)
-                 (eq (aref keys 1) ?x))))
+                            (aref "\M-x" 0)
+                          ?\M-x))
+      (and (>= (length keys) 2)
+           (eq (aref keys 0) meta-prefix-char)
+           (eq (aref keys 1) ?x))))
 
 ;;;###autoload
 (defun sophomore-disabled-M-x (cmd keys)
